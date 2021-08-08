@@ -61,7 +61,6 @@ const RangeSlider = ({
         <input
           type='range'
           onMouseMove={displayTooltip}
-          onMouseLeave={hideTooltip}
           onMouseOut={hideTooltip}
           ref={sliderRef}
           min={min}
