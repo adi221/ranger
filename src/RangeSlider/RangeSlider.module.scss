@@ -1,12 +1,19 @@
+.container {
+  background-color: #22273a;
+  height: fit-content;
+  width: fit-content;
+  padding: 0 1rem;
+  border-radius: 10px;
+}
+
 .rangeContainer {
   background-color: #22273a;
   height: 30px;
-  padding: 1rem;
+  padding: 1rem 0;
   display: flex;
   width: min-content;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
   position: relative;
 
   input[type='range'] {
@@ -14,7 +21,7 @@
     border-radius: 5px;
     background: #ffffff50;
     outline: none;
-    cursor: pointer;
+    cursor: grab;
     height: 2px;
     width: 200px;
 
@@ -24,7 +31,7 @@
       height: 20px;
       border-radius: 50%;
       background: rgb(255, 255, 255);
-      cursor: pointer;
+      cursor: grab;
       transition: all 0.15s ease-in-out;
       &:hover {
         background: rgb(212, 212, 212);
@@ -37,7 +44,7 @@
       border: 0;
       border-radius: 50%;
       background: rgb(255, 255, 255);
-      cursor: pointer;
+      cursor: grab;
       transition: all 0.15s ease-in-out;
       &:hover {
         background: rgb(212, 212, 212);
@@ -46,19 +53,43 @@
     }
   }
 
-  .label{
+  .label {
     position: absolute;
     color: #fff;
     font-size: 11px;
     bottom: 5px;
   }
 
-  .minLabel{
-    left: 20px;
+  .minLabel {
+    left: 5px;
   }
 
-  .maxLabel{
-    right: 20px;
+  .maxLabel {
+    right: 5px;
   }
 
+  .tooltip {
+    position: absolute;
+    z-index: 10;
+    bottom: 85%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px;
+    border-radius: 8px;
+    color: #fff;
+    background-color: #ff42aa;
+
+    &::before {
+      content: '';
+      position: absolute;
+      background-color: #ff42aa;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      z-index: 10;
+      height: 5px;
+      width: 10px;
+      clip-path: polygon(100% 0, 0 0, 50% 100%);
+    }
+  }
 }
