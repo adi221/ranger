@@ -31,7 +31,6 @@
       height: 20px;
       border-radius: 50%;
       background: rgb(255, 255, 255);
-      cursor: grab;
       transition: all 0.15s ease-in-out;
       &:hover {
         background: rgb(212, 212, 212);
@@ -44,12 +43,16 @@
       border: 0;
       border-radius: 50%;
       background: rgb(255, 255, 255);
-      cursor: grab;
       transition: all 0.15s ease-in-out;
       &:hover {
         background: rgb(212, 212, 212);
         transform: scale(1.2);
       }
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.85;
     }
   }
 

@@ -73,6 +73,7 @@ const RangeSlider = ({
           value={value}
           onChange={onChange}
           step={step}
+          disabled={disabled}
           {...otherProps}
         />
         {renderLabels()}
