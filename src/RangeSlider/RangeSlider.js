@@ -49,12 +49,8 @@ const RangeSlider = ({
 
     return (
       <>
-        <span className={minLabel} data-testid='span'>
-          {min}
-        </span>
-        <span className={maxLabel} data-testid='span'>
-          {max}
-        </span>
+        <span className={minLabel}>{min}</span>
+        <span className={maxLabel}>{max}</span>
       </>
     );
   };

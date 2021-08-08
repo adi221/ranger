@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { getByRole, getAllByTestId } from '@testing-library/dom';
+import { getByRole, getByText } from '@testing-library/dom';
 import RangeSlider from './';
 
 describe('<RangeSlider/>', () => {
@@ -39,8 +39,10 @@ describe('<RangeSlider/>', () => {
     it('should have two spans to specify the min and max values', () => {
       const { container } = render(<RangeSlider />);
 
-      const labels = getAllByTestId(container, 'span');
-      expect(labels.length).toBe(2);
+      const minLabel = getByText(container, '0');
+      const maxLabel = getByText(container, '100');
+      expect(minLabel).toBeTruthy();
+      expect(maxLabel).toBeTruthy();
     });
   });
 
@@ -50,11 +52,10 @@ describe('<RangeSlider/>', () => {
 
       const rangerInput = getByRole(container, 'slider');
       const value = 80;
-      fireEvent.change(rangerInput, {
+      const onChange = fireEvent.change(rangerInput, {
         target: { value },
       });
-
-      expect(+rangerInput.value).toBe(value);
+      expect(onChange).toBeTruthy();
     });
 
     it('should change value when input is decreased', () => {
@@ -62,11 +63,10 @@ describe('<RangeSlider/>', () => {
 
       const rangerInput = getByRole(container, 'slider');
       const value = 20;
-      fireEvent.change(rangerInput, {
+      const onChange = fireEvent.change(rangerInput, {
         target: { value },
       });
-
-      expect(+rangerInput.value).toBe(value);
+      expect(onChange).toBeTruthy();
     });
   });
 });
