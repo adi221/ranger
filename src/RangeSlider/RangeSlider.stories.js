@@ -4,7 +4,7 @@ import { centerDecorator } from '../../../utils/storybook/decorators';
 import styles from './RangeSlider.modules.scss';
 
 export default {
-  title: 'User Inputs/Checkbox',
+  title: 'User Inputs/RangeSlider',
   component: RangeSlider,
   decorators: [centerDecorator],
 };
