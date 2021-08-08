@@ -25,28 +25,23 @@
     height: 2px;
     width: 200px;
 
-    &:active::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgb(255, 255, 255);
-      transition: all 0.15s ease-in-out;
-      &:hover {
-        background: rgb(212, 212, 212);
-        transform: scale(1.2);
-      }
+    &::-moz-range-thumb,
+    ::-webkit-slider-thumb {
+      height: 16px;
+      width: 16px;
     }
-    &:active::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
-      border: 0;
+
+    &:active::-webkit-slider-thumb,
+    :active::-moz-range-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
       border-radius: 50%;
       background: rgb(255, 255, 255);
       transition: all 0.15s ease-in-out;
       &:hover {
         background: rgb(212, 212, 212);
-        transform: scale(1.2);
+        transform: scale(1.1);
       }
     }
 
