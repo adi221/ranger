@@ -1,15 +1,17 @@
+@import '~@anyvision/style-guide';
+
 .container {
-  background-color: #22273a;
+  background-color: av-color(content);
   height: fit-content;
   width: fit-content;
-  padding: 0 1rem;
-  border-radius: 10px;
+  padding: 0 av-space(base);
+  border-radius: av-radius(base);
 }
 
 .rangeContainer {
-  background-color: #22273a;
-  height: 30px;
-  padding: 1rem 0;
+  background-color: av-color(content);
+  height: av-size(sz-32);
+  padding: av-space(base) 0;
   display: flex;
   width: min-content;
   justify-content: center;
@@ -18,42 +20,41 @@
 
   input[type='range'] {
     -webkit-appearance: none;
-    border-radius: 5px;
-    background: #ffffff50;
+    border-radius: av-radius(tidy);
+    background: av-color(ac-rigel);
     outline: none;
     cursor: grab;
     height: 2px;
-    width: 200px;
+    width: av-size(sz-240);
 
     &::-moz-range-thumb,
     ::-webkit-slider-thumb {
-      height: 16px;
-      width: 16px;
+      height: av-space(base);
+      width: av-space(base);
+      color: av-color(primary);
     }
 
     &:active::-webkit-slider-thumb,
     :active::-moz-range-thumb {
       -webkit-appearance: none;
-      height: 16px;
-      width: 16px;
-      border-radius: 50%;
-      background: rgb(255, 255, 255);
+      border-radius: av-radius(circle);
+      color: av-color(purewhite);
       transition: all 0.15s ease-in-out;
       &:hover {
-        background: rgb(212, 212, 212);
+        background: av-color(ac-procyon);
         transform: scale(1.1);
       }
     }
 
     &:disabled {
       cursor: default;
-      opacity: 0.85;
+      opacity: av-opacity(disabled);
     }
   }
 
   .label {
     position: absolute;
-    color: #fff;
+    color: av-color(purewhite);
     font-size: 11px;
     bottom: 5px;
   }
@@ -68,23 +69,23 @@
 
   .tooltip {
     position: absolute;
-    z-index: 10;
+    z-index: av-z-index(popup);
     bottom: 85%;
     left: 50%;
     transform: translateX(-50%);
-    padding: 12px;
-    border-radius: 8px;
-    color: #fff;
-    background-color: #ff42aa;
+    padding: av-space(tiny);
+    border-radius: av-radius(base);
+    color: av-color(purewhite);
+    background-color:av-color(decorative);
 
     &::before {
       content: '';
       position: absolute;
-      background-color: #ff42aa;
+      background-color:av-color(decorative);
       left: 50%;
       top: 100%;
       transform: translateX(-50%);
-      z-index: 10;
+      z-index: av-z-index(popup);
       height: 5px;
       width: 10px;
       clip-path: polygon(100% 0, 0 0, 50% 100%);

@@ -12,7 +12,7 @@ const App = () => {
         value={value}
         onChange={e => setValue(e.target.value)}
       />
-      <p>value: {value}</p>
+      <p>Value: {value}</p>
     </>
   );
 };
