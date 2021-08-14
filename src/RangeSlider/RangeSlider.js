@@ -1,7 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './RangeSlider.module.scss';
 import propTypes from 'prop-types';
 import classNames from 'classnames';
+
+const SLIDER_SETTINGS = {
+  fill: styles.fill,
+  background: styles.bg,
+  thumbSize: 24,
+  width: 480,
+  get fixRangePercentage() {
+    return ((this.thumbSize * 0.5) / this.width) * 100;
+  },
+};
+
 
 const RangeSlider = ({
   min,
@@ -10,28 +21,69 @@ const RangeSlider = ({
   onChange,
   step,
   disabled,
+  isDarkTheme,
   ...otherProps
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hoverValue, setHoverValue] = useState(null);
+  const [hoverPos, setHoverPos] = useState(null);
   const sliderRef = useRef(null);
   const tooltipRef = useRef(null);
 
   useEffect(() => {
     if (!showTooltip) return;
-    tooltipRef.current.style.left = `${hoverValue}%`;
-  }, [showTooltip, hoverValue]);
+    const tooltipPos = (100 * (hoverPos - min)) / (max - min);
+    tooltipRef.current.style.left = `${tooltipPos}%`;
+  }, [showTooltip, hoverPos]);
 
-  const getMouseLocation = e => e.clientX;
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    const percentage = (100 * (value - min)) / (max - min);
+    const bg = `linear-gradient(90deg, ${SLIDER_SETTINGS.fill} ${percentage}%, ${
+      SLIDER_SETTINGS.background
+    } ${percentage + 0.1}%)`;
+    sliderRef.current.style.background = bg;
+  }, [value]);
+
+    /**
+    * The problem stems from the fact that the range thumb is 24px size
+    * and therefore there is a deviation percentage of thumbSizeRadius / sliderWidth.
+    * For example, 24 * 0.5 / 480 = 2.5%. So if pos is in the lower half reduce 0 - 2.5%,
+    * and if in the upper half add 0 - 2.5%
+    * @function fixThumbRangeDeviation
+    * @param {number} hoverVal the almost accurate hover value
+    * @returns {number} returns the accurate value
+   */
+  const fixThumbRangeDeviation = hoverVal =>{
+    // Get relative position in the slider, between 0 - 1
+    const pos = (hoverValue - min) / (max- min);
+    const {fixRangePercentage} = SLIDER_SETTINGS;
+    if(pos < 0.5){
+      const substraction = (0.5 - pos) / 0.5;
+      return hoverVal - (substraction * fixRangePercentage);
+    }else{
+      const addition = (pos - 0.5) / 0.5;
+      return hoverVal + (addition * fixRangePercentage);
+    }
+  }
+
   const calculatePercentage = e => {
-    const mouseX = getMouseLocation(e);
-    const { left, right } = sliderRef.current.getBoundingClientRect();
-    const percentage = (mouseX - left) / (right - left);
-    if (percentage > 1 || percentage < 0) {
-      setShowTooltip(false);
+    const mouseX = Number(e.nativeEvent.offsetX);
+    const hoverVal = (mouseX / e.target.clientWidth) * parseInt(max, 10);
+    if(hoverVal > max || hoverVal < min) return;
+
+    if(step === 0.1){
+      setHoverPos(hoverVal);
+      setHoverValue(hoverVal.toFixed(1));
       return;
     }
-    setHoverValue(Math.round(percentage * 100));
+
+    let updatedVal = fixThumbRangeDeviation(hoverVal);
+    if(updatedVal > max) updatedVal = max;
+    if(updatedVal < min) updatedVal = min;
+
+    setHoverPos(hoverVal);
+    setHoverValue(Math.round(updatedVal));
   };
 
   const displayTooltip = e => {
@@ -39,13 +91,21 @@ const RangeSlider = ({
     setShowTooltip(true);
   };
 
-  const hideTooltip = e => {
+  const hideTooltip = () => {
     setShowTooltip(false);
   };
 
   const renderLabels = () => {
-    const minLabel = classNames(styles.label, styles.minLabel);
-    const maxLabel = classNames(styles.label, styles.maxLabel);
+    const minLabel = classNames(
+      styles.label,
+      styles.minLabel,
+      isDarkTheme && styles.dark
+    );
+    const maxLabel = classNames(
+      styles.label,
+      styles.maxLabel,
+      isDarkTheme && styles.dark
+    );
 
     return (
       <>
@@ -74,7 +134,7 @@ const RangeSlider = ({
         {renderLabels()}
         {showTooltip && (
           <div ref={tooltipRef} className={styles.tooltip}>
-            {hoverValue}%
+            {hoverValue}
           </div>
         )}
       </div>
@@ -89,6 +149,7 @@ RangeSlider.defaultProps = {
   onChange: e => {},
   step: 1,
   disabled: false,
+  isDarkTheme: false,
 };
 
 RangeSlider.propTypes = {
@@ -96,7 +157,7 @@ RangeSlider.propTypes = {
   min: propTypes.number,
   /** The max value of the range */
   max: propTypes.number,
-  /** Value of the slider*/
+  /** Value of the slider */
   value: propTypes.oneOfType([propTypes.string, propTypes.number]),
   /** Callback when the component's state is changed. */
   onChange: propTypes.func,
@@ -104,6 +165,8 @@ RangeSlider.propTypes = {
   step: propTypes.number,
   /** Determines the disabled mode of the RangeSlider, if true - disabled. */
   disabled: propTypes.bool,
+  /** Changes the styles based on background theme, if true - theme is dark. */
+  isDarkTheme: propTypes.bool,
 };
 
 export default RangeSlider;

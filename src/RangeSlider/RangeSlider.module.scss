@@ -1,19 +1,17 @@
 @import '~@anyvision/style-guide';
 
 .container {
-  background-color: av-color(content);
   height: fit-content;
   width: fit-content;
   padding: 0 av-space(base);
-  border-radius: av-radius(base);
+  background-color: inherit;
 }
 
 .rangeContainer {
-  background-color: av-color(content);
-  height: av-size(sz-32);
+  height: av-size(sz-24);
   padding: av-space(base) 0;
   display: flex;
-  width: min-content;
+  width: fit-content;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -21,30 +19,50 @@
   input[type='range'] {
     -webkit-appearance: none;
     border-radius: av-radius(tidy);
-    background: av-color(ac-rigel);
+    background-color: av-color(primary, av-opacity(disabled));
     outline: none;
-    cursor: grab;
-    height: 2px;
-    width: av-size(sz-240);
+    cursor: pointer;
+    height: 4px;
+    width: av-size(sz-480);
 
-    &::-moz-range-thumb,
-    ::-webkit-slider-thumb {
-      height: av-space(base);
-      width: av-space(base);
-      color: av-color(primary);
-    }
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: av-size(sz-24);
+        width: av-size(sz-24);
+        border-radius: av-radius(circle);
+        background: rgb(255, 255, 255);
+        cursor: pointer;
+        -webkit-transition: all 0.15s ease-in-out;
+        transition: all 0.15s ease-in-out;
+        border: av-color(primary) solid 3px;
 
-    &:active::-webkit-slider-thumb,
-    :active::-moz-range-thumb {
-      -webkit-appearance: none;
-      border-radius: av-radius(circle);
-      color: av-color(purewhite);
-      transition: all 0.15s ease-in-out;
-      &:hover {
-        background: av-color(ac-procyon);
-        transform: scale(1.1);
+        &:hover {
+          background: rgb(212, 212, 212);
+          transform: scale(1.1);
+        }
+        &:active{
+          box-shadow: 0 8px 16px 0.1px av-color(trueblack);
+        }
       }
-    }
+
+    &::-moz-range-thumb {
+        -moz-appearance: none;
+        height: av-size(sz-24);
+        width: av-size(sz-24);
+        border-radius: av-radius(circle);
+        background: rgb(255, 255, 255);
+        cursor: pointer;
+        transition: all 0.15s ease-in-out;
+        border: av-color(primary) solid 3px;
+       
+        &:hover {
+          background: rgb(212, 212, 212);
+          transform: scale(1.1);
+        }
+        &:active{
+          box-shadow: 0 8px 16px 0.1px av-color(trueblack);
+        }
+      }
 
     &:disabled {
       cursor: default;
@@ -54,7 +72,7 @@
 
   .label {
     position: absolute;
-    color: av-color(purewhite);
+    color: av-color(trueblack);
     font-size: 11px;
     bottom: 5px;
   }
@@ -67,21 +85,26 @@
     right: 5px;
   }
 
+  .dark{
+    color: av-color(purewhite);
+  }
+
   .tooltip {
     position: absolute;
     z-index: av-z-index(popup);
     bottom: 85%;
     left: 50%;
     transform: translateX(-50%);
-    padding: av-space(tiny);
-    border-radius: av-radius(base);
+    padding: av-space(micro) av-space(tiny);
+    border-radius: av-radius(tidy);
     color: av-color(purewhite);
-    background-color:av-color(decorative);
+    background-color:av-color(primary);
+    font-size: 11px;
 
     &::before {
       content: '';
       position: absolute;
-      background-color:av-color(decorative);
+      background-color:av-color(primary);
       left: 50%;
       top: 100%;
       transform: translateX(-50%);
@@ -91,4 +114,12 @@
       clip-path: polygon(100% 0, 0 0, 50% 100%);
     }
   }
+}
+
+$range-bg: av-color(primary, av-opacity(disabled));
+$range-fill: av-color(primary);
+
+:export {
+  bg: $range-bg;
+  fill: $range-fill;
 }
