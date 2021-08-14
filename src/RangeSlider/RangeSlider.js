@@ -38,46 +38,46 @@ const RangeSlider = ({
   useEffect(() => {
     if (!sliderRef.current) return;
     const percentage = (100 * (value - min)) / (max - min);
-    const bg = `linear-gradient(90deg, ${SLIDER_SETTINGS.fill} ${percentage}%, ${
-      SLIDER_SETTINGS.background
-    } ${percentage + 0.1}%)`;
+    const bg = `linear-gradient(90deg, ${
+      SLIDER_SETTINGS.fill
+    } ${percentage}%, ${SLIDER_SETTINGS.background} ${percentage + 0.1}%)`;
     sliderRef.current.style.background = bg;
   }, [value, min, max]);
 
-    /**
-    * The problem stems from the fact that the range thumb is 24px size
-    * and therefore there is a deviation percentage of thumbSizeRadius / sliderWidth.
-    * For example, 24 * 0.5 / 480 = 2.5%. So if pos is in the lower half reduce 0 - 2.5%,
-    * and if in the upper half add 0 - 2.5%
-    * @function fixThumbRangeDeviation
-    * @param {number} hoverVal the almost accurate hover value
-    * @returns {number} returns the accurate value
+  /**
+   * The problem stems from the fact that the range thumb is 24px size
+   * and therefore there is a deviation percentage of thumbSizeRadius / sliderWidth.
+   * For example, 24 * 0.5 / 480 = 2.5%. So if pos is in the lower half reduce 0 - 2.5%,
+   * and if in the upper half add 0 - 2.5%
+   * @function fixThumbRangeDeviation
+   * @param {number} hoverVal the almost accurate hover value
+   * @returns {number} returns the accurate value
    */
-  const fixThumbRangeDeviation = hoverVal =>{
+  const fixThumbRangeDeviation = hoverVal => {
     // Get relative position in the slider, between 0 - 1
-    const pos = (hoverValue - min) / (max- min);
-    const {fixRangePercentage} = SLIDER_SETTINGS;
+    const pos = (hoverValue - min) / (max - min);
+    const { fixRangePercentage } = SLIDER_SETTINGS;
     let value;
 
-    if(pos < 0.5){
+    if (pos < 0.5) {
       const substraction = (0.5 - pos) / 0.5;
-      value = hoverVal - (substraction * fixRangePercentage);
-    }else{
+      value = hoverVal - substraction * fixRangePercentage;
+    } else {
       const addition = (pos - 0.5) / 0.5;
-      value = hoverVal + (addition * fixRangePercentage);
+      value = hoverVal + addition * fixRangePercentage;
     }
 
-    if(value > max) value = max;
-    if(value < min) value = min;
+    if (value > max) value = max;
+    if (value < min) value = min;
     return value;
-  }
+  };
 
   const calculatePercentage = e => {
     const mouseX = Number(e.nativeEvent.offsetX);
     const hoverVal = (mouseX / e.target.clientWidth) * parseInt(max, 10);
-    if(hoverVal > max || hoverVal < min) return;
+    if (hoverVal > max || hoverVal < min) return;
 
-    if(step === 0.1){
+    if (step === 0.1) {
       setHoverPos(hoverVal);
       setHoverValue(hoverVal.toFixed(1));
       return;
@@ -88,18 +88,16 @@ const RangeSlider = ({
     setHoverValue(Math.round(updatedVal));
   };
 
-  const posTooltipMiddleThumb = () =>{
-
-  }
+  const posTooltipMiddleThumb = () => {};
 
   const posTooltipToHover = e => {
-    if(disabled) return;
+    if (disabled) return;
     calculatePercentage(e);
     // setShowTooltip(true);
   };
 
   const posTooltipToValue = () => {
-    if(disabled) return;
+    if (disabled) return;
     setHoverPos(value);
     setHoverValue(value);
   };
