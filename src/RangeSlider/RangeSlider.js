@@ -13,7 +13,6 @@ const SLIDER_SETTINGS = {
   },
 };
 
-
 const RangeSlider = ({
   min,
   max,
@@ -31,10 +30,10 @@ const RangeSlider = ({
   const tooltipRef = useRef(null);
 
   useEffect(() => {
-    if (!showTooltip) return;
-    const tooltipPos = (100 * (hoverPos - min)) / (max - min);
+    // if (!showTooltip) return;
+    const tooltipPos = (100 * ((hoverPos || value) - min)) / (max - min);
     tooltipRef.current.style.left = `${tooltipPos}%`;
-  }, [showTooltip, hoverPos]);
+  }, [showTooltip, hoverPos, min, max]);
 
   useEffect(() => {
     if (!sliderRef.current) return;
@@ -43,7 +42,7 @@ const RangeSlider = ({
       SLIDER_SETTINGS.background
     } ${percentage + 0.1}%)`;
     sliderRef.current.style.background = bg;
-  }, [value]);
+  }, [value, min, max]);
 
     /**
     * The problem stems from the fact that the range thumb is 24px size
@@ -58,13 +57,19 @@ const RangeSlider = ({
     // Get relative position in the slider, between 0 - 1
     const pos = (hoverValue - min) / (max- min);
     const {fixRangePercentage} = SLIDER_SETTINGS;
+    let value;
+
     if(pos < 0.5){
       const substraction = (0.5 - pos) / 0.5;
-      return hoverVal - (substraction * fixRangePercentage);
+      value = hoverVal - (substraction * fixRangePercentage);
     }else{
       const addition = (pos - 0.5) / 0.5;
-      return hoverVal + (addition * fixRangePercentage);
+      value = hoverVal + (addition * fixRangePercentage);
     }
+
+    if(value > max) value = max;
+    if(value < min) value = min;
+    return value;
   }
 
   const calculatePercentage = e => {
@@ -79,21 +84,29 @@ const RangeSlider = ({
     }
 
     let updatedVal = fixThumbRangeDeviation(hoverVal);
-    if(updatedVal > max) updatedVal = max;
-    if(updatedVal < min) updatedVal = min;
-
     setHoverPos(hoverVal);
     setHoverValue(Math.round(updatedVal));
   };
 
-  const displayTooltip = e => {
+  const posTooltipMiddleThumb = () =>{
+
+  }
+
+  const posTooltipToHover = e => {
+    if(disabled) return;
     calculatePercentage(e);
-    setShowTooltip(true);
+    // setShowTooltip(true);
   };
 
-  const hideTooltip = () => {
-    setShowTooltip(false);
+  const posTooltipToValue = () => {
+    if(disabled) return;
+    setHoverPos(value);
+    setHoverValue(value);
   };
+
+  // const hideTooltip = () => {
+  //   setShowTooltip(false);
+  // };
 
   const renderLabels = () => {
     const minLabel = classNames(
@@ -116,12 +129,12 @@ const RangeSlider = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, disabled && styles.disabled)}>
       <div className={styles.rangeContainer}>
         <input
           type='range'
-          onMouseMove={displayTooltip}
-          onMouseOut={hideTooltip}
+          onMouseMove={posTooltipToHover}
+          onMouseOut={posTooltipToValue}
           ref={sliderRef}
           min={min}
           max={max}
@@ -132,11 +145,14 @@ const RangeSlider = ({
           {...otherProps}
         />
         {renderLabels()}
-        {showTooltip && (
+        <div ref={tooltipRef} className={styles.tooltip}>
+          {hoverValue || value}
+        </div>
+        {/* {showTooltip && (
           <div ref={tooltipRef} className={styles.tooltip}>
             {hoverValue}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
@@ -146,7 +162,7 @@ RangeSlider.defaultProps = {
   min: 0,
   max: 100,
   value: 50,
-  onChange: e => {},
+  onChange: () => {},
   step: 1,
   disabled: false,
   isDarkTheme: false,

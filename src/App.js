@@ -3,7 +3,7 @@ import RangeSlider from './RangeSlider';
 
 const App = () => {
   const [value, setValue] = useState(50);
-  const [value2, setValue2] = useState(50);
+  const [value2, setValue2] = useState(0.5);
 
   return (
     <>
@@ -20,6 +20,7 @@ const App = () => {
           value={value}
           onChange={e => setValue(e.target.value)}
           isDarkTheme
+          
         />
         <p style={{ color: 'white' }}>Value: {value}</p>
       </div>

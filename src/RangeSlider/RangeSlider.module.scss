@@ -5,6 +5,11 @@
   width: fit-content;
   padding: 0 av-space(base);
   background-color: inherit;
+
+   &.disabled {
+    cursor: default;
+    opacity: av-opacity(disabled);
+  }
 }
 
 .rangeContainer {
@@ -22,7 +27,7 @@
     background-color: av-color(primary, av-opacity(disabled));
     outline: none;
     cursor: pointer;
-    height: 4px;
+    height: 6px;
     width: av-size(sz-480);
 
     &::-webkit-slider-thumb {
@@ -31,7 +36,7 @@
         width: av-size(sz-24);
         border-radius: av-radius(circle);
         background: rgb(255, 255, 255);
-        cursor: pointer;
+        cursor: inherit;
         -webkit-transition: all 0.15s ease-in-out;
         transition: all 0.15s ease-in-out;
         border: av-color(primary) solid 3px;
@@ -51,7 +56,7 @@
         width: av-size(sz-24);
         border-radius: av-radius(circle);
         background: rgb(255, 255, 255);
-        cursor: pointer;
+        cursor: inherit;
         transition: all 0.15s ease-in-out;
         border: av-color(primary) solid 3px;
        
