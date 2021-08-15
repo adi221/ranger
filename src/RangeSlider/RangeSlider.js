@@ -3,17 +3,13 @@ import styles from './RangeSlider.module.scss';
 import propTypes from 'prop-types';
 import classNames from 'classnames';
 
-const SLIDER_SETTINGS = {
-  fill: styles.fill,
-  background: styles.bg,
-  thumbSize: 24,
-  width: 480,
-  get fixRangeRatio() {
-    return (this.thumbSize * 0.5) / this.width;
-  },
-  get fixRangePercentage() {
-    return this.fixRangeRatio * 100;
-  },
+const SLIDER_WIDTHS = {
+  sz144: 144,
+  sz240: 240,
+  sz320: 320,
+  sz480: 480,
+  sz640: 640,
+  sz960: 960
 };
 
 const RangeSlider = ({
@@ -23,6 +19,7 @@ const RangeSlider = ({
   onChange,
   step,
   disabled,
+  sliderWidth,
   isDarkTheme,
   isToggleTooltip,
   ...otherProps
@@ -32,6 +29,19 @@ const RangeSlider = ({
   const [hoverPos, setHoverPos] = useState(null);
   const sliderRef = useRef(null);
   const tooltipRef = useRef(null);
+
+  const SLIDER_SETTINGS = {
+    fill: styles.fill,
+    background: styles.bg,
+    thumbSize: 24,
+    width: SLIDER_WIDTHS[sliderWidth] || 480,
+    get fixRangeRatio() {
+      return (this.thumbSize * 0.5) / this.width;
+    },
+    get fixRangePercentage() {
+      return this.fixRangeRatio * 100;
+    },
+  };
 
   useEffect(() => {
     if (isToggleTooltip && !showTooltip) return;
@@ -46,7 +56,7 @@ const RangeSlider = ({
       SLIDER_SETTINGS.fill
     } ${percentage}%, ${SLIDER_SETTINGS.background} ${percentage + 0.1}%)`;
     sliderRef.current.style.background = bg;
-  }, [value, min, max]);
+  }, [value, min, max, SLIDER_SETTINGS]);
 
   // Get relative position in the slider, between 0 - 1
   const getPositionInSlider = val => (Number(val) - min) / (max - min);
@@ -183,6 +193,7 @@ const RangeSlider = ({
           onMouseMove={posTooltipToHover}
           onMouseOut={posTooltipToValue}
           ref={sliderRef}
+          style={{ width: `${SLIDER_SETTINGS.width}px` }}
           min={min}
           max={max}
           value={value}
@@ -205,6 +216,7 @@ RangeSlider.defaultProps = {
   onChange: () => {},
   step: 1,
   disabled: false,
+  sliderWidth: 'sz480',
   isDarkTheme: false,
   isToggleTooltip: false,
 };
@@ -222,6 +234,8 @@ RangeSlider.propTypes = {
   step: propTypes.number,
   /** Determines the disabled mode of the RangeSlider, if true - disabled. */
   disabled: propTypes.bool,
+  /** The width of the range slider. Default is 480px. */
+  sliderWidth: propTypes.string,
   /** Changes the styles based on background theme, if true - theme is dark. */
   isDarkTheme: propTypes.bool,
   /** Determines if tooltip is toggleable or not, if false - the tooltip is always shown,

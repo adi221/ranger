@@ -78,6 +78,7 @@
   .label {
     position: absolute;
     color: av-color(trueblack);
+    // font-size: av-font-size(tiny);
     font-size: 11px;
     bottom: 5px;
   }
@@ -104,6 +105,7 @@
     border-radius: av-radius(tidy);
     color: av-color(purewhite);
     background-color:av-color(primary);
+    // font-size: av-font-size(tiny);
     font-size: 11px;
 
     &::before {
@@ -111,7 +113,7 @@
       position: absolute;
       background-color:av-color(primary);
       left: 50%;
-      top: 100%;
+      top: 98%;
       transform: translateX(-50%);
       z-index: av-z-index(popup);
       height: 5px;
