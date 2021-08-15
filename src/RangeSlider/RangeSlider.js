@@ -245,7 +245,14 @@ RangeSlider.propTypes = {
   /** Determines the disabled mode of the RangeSlider, if true - disabled. */
   disabled: propTypes.bool,
   /** The width of the range slider. Default is 'sz480' = 480px. */
-  sliderWidth: propTypes.string,
+  sliderWidth: propTypes.oneOf([
+    'sz144',
+    'sz240',
+    'sz360',
+    'sz480',
+    'sz640',
+    'sz960',
+  ]),
   /** Changes the styles based on background theme, if true - theme is dark. */
   isDarkTheme: propTypes.bool,
   /** Determines if tooltip is toggleable or not, if false - the tooltip is always shown,
