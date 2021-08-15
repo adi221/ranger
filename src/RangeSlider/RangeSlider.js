@@ -8,8 +8,11 @@ const SLIDER_SETTINGS = {
   background: styles.bg,
   thumbSize: 24,
   width: 480,
+  get fixRangeRatio() {
+    return (this.thumbSize * 0.5) / this.width;
+  },
   get fixRangePercentage() {
-    return ((this.thumbSize * 0.5) / this.width) * 100;
+    return this.fixRangeRatio * 100;
   },
 };
 
@@ -46,9 +49,7 @@ const RangeSlider = ({
   }, [value, min, max]);
 
   // Get relative position in the slider, between 0 - 1
-  const getPositionInSlider = val => {
-    return (Number(val) - min) / (max - min);
-  };
+  const getPositionInSlider = val => (Number(val) - min) / (max - min);
 
   /**
    * The problem stems from the fact that the range thumb is 24px size
@@ -77,6 +78,38 @@ const RangeSlider = ({
     return fixedValue;
   };
 
+  /**
+   * Calculates the middle of the range thumb. If relative position is less than
+   * half, it adds 0 - 2.5% to current pos, else - it subtracts 0 - 2.5%. With fixRangeRatio: 0 - 0.025%
+   * This function is about position of the thumb, the first function is about hover value.
+   * @function posTooltipMiddleThumb
+   * @param {number} val the value of the slider
+   * @returns {number} the middle position of the range thumb
+   */
+  const posTooltipMiddleThumb = val => {
+    const pos = getPositionInSlider(val);
+    const { fixRangePercentage, fixRangeRatio } = SLIDER_SETTINGS;
+    let middleValue = Number(val);
+
+    if (pos < 0.5) {
+      const addition = (0.5 - pos) / 0.5;
+      if (step === 0.1) {
+        middleValue += addition * fixRangeRatio;
+      } else {
+        middleValue += addition * fixRangePercentage;
+      }
+    } else {
+      const substraction = (pos - 0.5) / 0.5;
+      if (step === 0.1) {
+        middleValue -= substraction * fixRangeRatio;
+      } else {
+        middleValue -= substraction * fixRangePercentage;
+      }
+    }
+
+    return middleValue;
+  };
+
   const calculatePercentage = e => {
     const mouseX = Number(e.nativeEvent.offsetX);
     const hoverVal = (mouseX / e.target.clientWidth) * parseInt(max, 10);
@@ -91,21 +124,6 @@ const RangeSlider = ({
     let updatedVal = fixThumbRangeDeviation(hoverVal);
     setHoverPos(hoverVal);
     setHoverValue(Math.round(updatedVal));
-  };
-
-  const posTooltipMiddleThumb = val => {
-    const pos = getPositionInSlider(val);
-    const { fixRangePercentage } = SLIDER_SETTINGS;
-    let middleValue = Number(val);
-
-    if (pos < 0.5) {
-      const addition = (0.5 - pos) / 0.5;
-      middleValue += addition * fixRangePercentage;
-    } else {
-      const substraction = (pos - 0.5) / 0.5;
-      middleValue -= substraction * fixRangePercentage;
-    }
-    return middleValue;
   };
 
   const posTooltipToHover = e => {

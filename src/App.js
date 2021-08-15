@@ -22,6 +22,7 @@ const App = () => {
           value={value}
           onChange={e => setValue(e.target.value)}
           isDarkTheme
+          step={1}
         />
         <p style={{ color: 'white' }}>Value: {value}</p>
       </div>
