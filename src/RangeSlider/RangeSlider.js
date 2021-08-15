@@ -9,7 +9,7 @@ const SLIDER_WIDTHS = {
   sz320: 320,
   sz480: 480,
   sz640: 640,
-  sz960: 960
+  sz960: 960,
 };
 
 const RangeSlider = ({
@@ -43,6 +43,9 @@ const RangeSlider = ({
     },
   };
 
+  // Get relative position in the slider, between 0 - 1
+  const getPositionInSlider = val => (Number(val) - min) / (max - min);
+
   useEffect(() => {
     if (isToggleTooltip && !showTooltip) return;
     const tooltipPos = (100 * ((hoverPos || value) - min)) / (max - min);
@@ -51,15 +54,12 @@ const RangeSlider = ({
 
   useEffect(() => {
     if (!sliderRef.current) return;
-    const percentage = (100 * (value - min)) / (max - min);
+    const percentage = 100 * getPositionInSlider(value);
     const bg = `linear-gradient(90deg, ${
       SLIDER_SETTINGS.fill
     } ${percentage}%, ${SLIDER_SETTINGS.background} ${percentage + 0.1}%)`;
     sliderRef.current.style.background = bg;
   }, [value, min, max, SLIDER_SETTINGS]);
-
-  // Get relative position in the slider, between 0 - 1
-  const getPositionInSlider = val => (Number(val) - min) / (max - min);
 
   /**
    * The problem stems from the fact that the range thumb is 24px size
@@ -234,7 +234,7 @@ RangeSlider.propTypes = {
   step: propTypes.number,
   /** Determines the disabled mode of the RangeSlider, if true - disabled. */
   disabled: propTypes.bool,
-  /** The width of the range slider. Default is 480px. */
+  /** The width of the range slider. Default is 'sz480' = 480px. */
   sliderWidth: propTypes.string,
   /** Changes the styles based on background theme, if true - theme is dark. */
   isDarkTheme: propTypes.bool,
