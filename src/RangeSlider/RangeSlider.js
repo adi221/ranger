@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './RangeSlider.module.scss';
 import propTypes from 'prop-types';
 import classNames from 'classnames';
@@ -44,7 +44,10 @@ const RangeSlider = ({
   };
 
   // Get relative position in the slider, between 0 - 1
-  const getPositionInSlider = val => (Number(val) - min) / (max - min);
+  const getPositionInSlider = useCallback(
+    val => (Number(val) - min) / (max - min),
+    [min, max]
+  );
 
   useEffect(() => {
     if (isToggleTooltip && !showTooltip) return;
@@ -59,7 +62,14 @@ const RangeSlider = ({
       SLIDER_SETTINGS.fill
     } ${percentage}%, ${SLIDER_SETTINGS.background} ${percentage + 0.1}%)`;
     sliderRef.current.style.background = bg;
-  }, [value, min, max, SLIDER_SETTINGS]);
+  }, [
+    value,
+    min,
+    max,
+    getPositionInSlider,
+    SLIDER_SETTINGS.fill,
+    SLIDER_SETTINGS.background,
+  ]);
 
   /**
    * The problem stems from the fact that the range thumb is 24px size
@@ -239,7 +249,7 @@ RangeSlider.propTypes = {
   /** Changes the styles based on background theme, if true - theme is dark. */
   isDarkTheme: propTypes.bool,
   /** Determines if tooltip is toggleable or not, if false - the tooltip is always shown,
-   * else - tooltip is shown only when user hovers over the slider */
+   *  else - tooltip is shown only when user hovers over the slider */
   isToggleTooltip: propTypes.bool,
 };
 
