@@ -6,7 +6,7 @@
   padding: 0 av-space(base);
   background-color: inherit;
 
-   &.disabled {
+  &.disabled {
     cursor: default;
     opacity: av-opacity(disabled);
   }
@@ -31,43 +31,43 @@
     width: av-size(sz-480);
 
     &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        height: av-size(sz-24);
-        width: av-size(sz-24);
-        border-radius: av-radius(circle);
-        background: rgb(255, 255, 255);
-        cursor: inherit;
-        -webkit-transition: all 0.15s ease-in-out;
-        transition: all 0.15s ease-in-out;
-        border: av-color(primary) solid 3px;
+      -webkit-appearance: none;
+      height: av-size(sz-24);
+      width: av-size(sz-24);
+      border-radius: av-radius(circle);
+      background: rgb(255, 255, 255);
+      cursor: inherit;
+      -webkit-transition: all 0.15s ease-in-out;
+      transition: all 0.15s ease-in-out;
+      border: av-color(primary) solid 3px;
 
-        &:hover {
-          background: rgb(212, 212, 212);
-          transform: scale(1.1);
-        }
-        &:active{
-          box-shadow: 0 8px 16px 0.1px av-color(trueblack);
-        }
+      &:hover {
+        background: rgb(212, 212, 212);
+        transform: scale(1.1);
       }
+      &:active {
+        box-shadow: 0 8px 16px 0.1px av-color(trueblack);
+      }
+    }
 
     &::-moz-range-thumb {
-        -moz-appearance: none;
-        height: av-size(sz-24);
-        width: av-size(sz-24);
-        border-radius: av-radius(circle);
-        background: rgb(255, 255, 255);
-        cursor: inherit;
-        transition: all 0.15s ease-in-out;
-        border: av-color(primary) solid 3px;
-       
-        &:hover {
-          background: rgb(212, 212, 212);
-          transform: scale(1.1);
-        }
-        &:active{
-          box-shadow: 0 8px 16px 0.1px av-color(trueblack);
-        }
+      -moz-appearance: none;
+      height: av-size(sz-24);
+      width: av-size(sz-24);
+      border-radius: av-radius(circle);
+      background: rgb(255, 255, 255);
+      cursor: inherit;
+      transition: all 0.15s ease-in-out;
+      border: av-color(primary) solid 3px;
+
+      &:hover {
+        background: rgb(212, 212, 212);
+        transform: scale(1.1);
       }
+      &:active {
+        box-shadow: 0 8px 16px 0.1px av-color(trueblack);
+      }
+    }
 
     &:disabled {
       cursor: default;
@@ -77,8 +77,7 @@
 
   .label {
     position: absolute;
-    color: av-color(trueblack);
-    // font-size: av-font-size(tiny);
+    color: av-color(content);
     font-size: 11px;
     bottom: 5px;
   }
@@ -91,10 +90,6 @@
     right: 5px;
   }
 
-  .dark{
-    color: av-color(purewhite);
-  }
-
   .tooltip {
     position: absolute;
     z-index: av-z-index(popup);
@@ -104,14 +99,14 @@
     padding: av-space(micro) av-space(tiny);
     border-radius: av-radius(tidy);
     color: av-color(purewhite);
-    background-color:av-color(primary);
-    // font-size: av-font-size(tiny);
+    background-color: av-color(primary);
+    // min-width: 12px;
     font-size: 11px;
 
     &::before {
       content: '';
       position: absolute;
-      background-color:av-color(primary);
+      background-color: av-color(primary);
       left: 50%;
       top: 98%;
       transform: translateX(-50%);

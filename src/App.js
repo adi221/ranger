@@ -21,8 +21,6 @@ const App = () => {
           max={100}
           value={value}
           onChange={e => setValue(e.target.value)}
-          isDarkTheme
-          sliderWidth='sz640'
         />
         <p style={{ color: 'white' }}>Value: {value}</p>
       </div>
@@ -36,19 +34,19 @@ const App = () => {
       >
         <RangeSlider
           min={0}
-          max={100}
+          max={1}
+          step={0.01}
           value={value3}
           onChange={e => setValue3(e.target.value)}
-          isDarkTheme
           isToggleTooltip
-          sliderWidth='sz320'
         />
         <p style={{ color: 'white' }}>Value3: {value3}</p>
       </div>
 
       <RangeSlider
         min={0}
-        max={100}
+        max={1}
+        step={0.1}
         value={value4}
         onChange={e => setValue4(e.target.value)}
         isToggleTooltip
@@ -58,10 +56,9 @@ const App = () => {
       <RangeSlider
         min={0}
         max={1}
-        step={0.1}
+        step={0.01}
         value={value2}
         onChange={e => setValue2(e.target.value)}
-        sliderWidth='sz960'
       />
       <p>Value2: {value2}</p>
     </>
