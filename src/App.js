@@ -10,9 +10,9 @@ const App = () => {
   return (
     <>
       <RangeSlider
-        min={0}
+        min={2}
         max={100}
-        step={1}
+        step={2}
         value={value}
         onChange={e => setValue(e.target.value)}
       />

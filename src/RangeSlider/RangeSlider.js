@@ -57,6 +57,22 @@ const RangeSlider = ({
     [min, max, SLIDER_SETTINGS.fixRangeRatio]
   );
 
+  // If min value is not divisible by a step bigger than 1, for example min = 3, step = 2
+  const fixModuloFromMin = useCallback(() => min % step, [min, step]);
+
+  // If step is integer that is not 1. For example, values of step 2 => 0, 2, 4, 6, 8
+  const roundValueBasedOnStep = useCallback(
+    value => step * Math.round(value / step) + fixModuloFromMin(),
+    [step, fixModuloFromMin]
+  );
+
+  // Counts number of decimals for float steps like 0.1, 0.01, 1.5
+  const countDecimals = useCallback(number => {
+    const text = number.toString();
+    const index = text.indexOf('.');
+    return index === -1 ? 0 : text.length - index - 1;
+  }, []);
+
   useEffect(() => {
     if (!tooltipRef.current) return;
     if (isToggleTooltip && !showTooltip) return;
@@ -78,15 +94,6 @@ const RangeSlider = ({
     SLIDER_SETTINGS.background,
   ]);
 
-  const countDecimals = number => {
-    const text = number.toString();
-    const index = text.indexOf('.');
-    return index === -1 ? 0 : text.length - index - 1;
-  };
-
-  // If step is integer that is not 1. For example, values of step 2 => 0, 2, 4, 6, 8
-  const roundValueBasedOnStep = value => step * Math.round(value / step);
-
   /**
    * The problem stems from the fact that the range thumb is 24px size
    * and therefore there is a deviation percentage of thumbSizeRadius / sliderWidth.
@@ -99,7 +106,7 @@ const RangeSlider = ({
   const fixThumbRangeDeviation = hoverVal => {
     const pos = getPositionInSlider(hoverVal);
     let fixedValue = hoverVal;
-    const fixRange = getFixRange(step);
+    const fixRange = getFixRange();
 
     const posFromCenter = (pos - 0.5) * 2;
     const adjustment = posFromCenter * fixRange;
@@ -125,7 +132,7 @@ const RangeSlider = ({
   const posTooltipMiddleThumb = val => {
     const pos = getPositionInSlider(val);
     let middleValue = Number(val);
-    const fixRange = getFixRange(step);
+    const fixRange = getFixRange();
 
     const posFromCenter = (pos - 0.5) / 0.5;
     const adjustment = posFromCenter * fixRange;
