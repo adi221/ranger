@@ -31,12 +31,9 @@ const RangeSlider = ({
       fill: styles.fill,
       background: styles.bg,
       thumbSize: 24,
-      width: sliderWidth || 480,
+      width: sliderWidth,
       get fixRangeRatio() {
         return (this.thumbSize * 0.5) / this.width;
-      },
-      get fixRangePercentage() {
-        return this.fixRangeRatio * 100;
       },
     }),
     [sliderWidth]
@@ -48,12 +45,24 @@ const RangeSlider = ({
     [min, max]
   );
 
+  // Get value of slider from the relative position in percentage
+  const getValueInSlider = useCallback(
+    percentage => (percentage * (max - min)) / 100 + min,
+    [min, max]
+  );
+
+  // Returns the correct ratio based on the total width times the fixRangeRatio
+  const getFixRange = useCallback(
+    () => (max - min) * SLIDER_SETTINGS.fixRangeRatio,
+    [min, max, SLIDER_SETTINGS.fixRangeRatio]
+  );
+
   useEffect(() => {
     if (!tooltipRef.current) return;
     if (isToggleTooltip && !showTooltip) return;
-    const tooltipPos = (100 * ((hoverPos || value) - min)) / (max - min);
+    const tooltipPos = hoverPos ?? 100 * getPositionInSlider(value);
     tooltipRef.current.style.left = `${tooltipPos}%`;
-  }, [showTooltip, hoverPos, isToggleTooltip, min, max, value]);
+  }, [showTooltip, hoverPos, isToggleTooltip, value, getPositionInSlider]);
 
   useEffect(() => {
     if (!sliderRef.current) return;
@@ -64,8 +73,6 @@ const RangeSlider = ({
     sliderRef.current.style.background = bg;
   }, [
     value,
-    min,
-    max,
     getPositionInSlider,
     SLIDER_SETTINGS.fill,
     SLIDER_SETTINGS.background,
@@ -77,14 +84,7 @@ const RangeSlider = ({
     return index === -1 ? 0 : text.length - index - 1;
   };
 
-  // Determine if step is float or integer and based on it return the correct ratio
-  const determineFixRange = step => {
-    const { fixRangePercentage, fixRangeRatio } = SLIDER_SETTINGS;
-    return step % 1 !== 0 ? fixRangeRatio : fixRangePercentage;
-  };
-
   // If step is integer that is not 1. For example, values of step 2 => 0, 2, 4, 6, 8
-  // min value
   const roundValueBasedOnStep = value => step * Math.round(value / step);
 
   /**
@@ -99,15 +99,11 @@ const RangeSlider = ({
   const fixThumbRangeDeviation = hoverVal => {
     const pos = getPositionInSlider(hoverVal);
     let fixedValue = hoverVal;
-    const fixRange = determineFixRange(step);
+    const fixRange = getFixRange(step);
 
-    if (pos < 0.5) {
-      const substraction = (0.5 - pos) / 0.5;
-      fixedValue -= substraction * fixRange;
-    } else {
-      const addition = (pos - 0.5) / 0.5;
-      fixedValue += addition * fixRange;
-    }
+    const posFromCenter = (pos - 0.5) * 2;
+    const adjustment = posFromCenter * fixRange;
+    fixedValue += adjustment;
 
     if (step > 1) {
       fixedValue = roundValueBasedOnStep(fixedValue);
@@ -129,27 +125,24 @@ const RangeSlider = ({
   const posTooltipMiddleThumb = val => {
     const pos = getPositionInSlider(val);
     let middleValue = Number(val);
-    const fixRange = determineFixRange(step);
+    const fixRange = getFixRange(step);
 
-    if (pos < 0.5) {
-      const addition = (0.5 - pos) / 0.5;
-      middleValue += addition * fixRange;
-    } else {
-      const substraction = (pos - 0.5) / 0.5;
-      middleValue -= substraction * fixRange;
-    }
+    const posFromCenter = (pos - 0.5) / 0.5;
+    const adjustment = posFromCenter * fixRange;
+    middleValue -= adjustment;
 
     return middleValue;
   };
 
   const calculatePercentage = e => {
     const mouseX = Number(e.nativeEvent.offsetX);
-    const hoverVal = (mouseX / e.target.clientWidth) * parseInt(max, 10);
-    if (hoverVal > max || hoverVal < min) return;
+    const curHoverPos = (mouseX / e.target.clientWidth) * 100;
+    const curHoverVal = getValueInSlider(curHoverPos);
+    if (curHoverVal > max || curHoverVal < min) return;
     const stepDecimalCount = countDecimals(step);
 
-    let updatedVal = fixThumbRangeDeviation(hoverVal);
-    setHoverPos(hoverVal);
+    const updatedVal = fixThumbRangeDeviation(curHoverVal);
+    setHoverPos(curHoverPos);
     setHoverValue(updatedVal.toFixed(stepDecimalCount));
   };
 
@@ -167,7 +160,7 @@ const RangeSlider = ({
     if (disabled) return;
     if (isToggleTooltip) return hideTooltip();
     const middleValue = posTooltipMiddleThumb(value);
-    setHoverPos(middleValue);
+    setHoverPos(100 * getPositionInSlider(middleValue));
     setHoverValue(value);
   };
 

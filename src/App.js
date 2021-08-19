@@ -9,39 +9,24 @@ const App = () => {
 
   return (
     <>
-      <div
-        style={{
-          padding: '1rem 2rem',
-          backgroundColor: '#021d3d',
-          marginBottom: '2rem',
-        }}
-      >
-        <RangeSlider
-          min={0}
-          max={100}
-          value={value}
-          onChange={e => setValue(e.target.value)}
-        />
-        <p style={{ color: 'white' }}>Value: {value}</p>
-      </div>
+      <RangeSlider
+        min={0}
+        max={100}
+        step={1}
+        value={value}
+        onChange={e => setValue(e.target.value)}
+      />
+      <p>Value: {value}</p>
 
-      <div
-        style={{
-          padding: '1rem 2rem',
-          backgroundColor: '#021d3d',
-          marginBottom: '2rem',
-        }}
-      >
-        <RangeSlider
-          min={0}
-          max={1}
-          step={0.01}
-          value={value3}
-          onChange={e => setValue3(e.target.value)}
-          isToggleTooltip
-        />
-        <p style={{ color: 'white' }}>Value3: {value3}</p>
-      </div>
+      <RangeSlider
+        min={99}
+        max={100}
+        step={0.1}
+        value={value3}
+        onChange={e => setValue3(e.target.value)}
+        isToggleTooltip
+      />
+      <p>Value3: {value3}</p>
 
       <RangeSlider
         min={0}
