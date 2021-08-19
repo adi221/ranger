@@ -67,11 +67,11 @@ const RangeSlider = ({
   );
 
   // Counts number of decimals for float steps like 0.1, 0.01, 1.5
-  const countDecimals = useCallback(number => {
-    const text = number.toString();
+  const countDecimals = useCallback(() => {
+    const text = step.toString();
     const index = text.indexOf('.');
     return index === -1 ? 0 : text.length - index - 1;
-  }, []);
+  }, [step]);
 
   useEffect(() => {
     if (!tooltipRef.current) return;
@@ -146,7 +146,7 @@ const RangeSlider = ({
     const curHoverPos = (mouseX / e.target.clientWidth) * 100;
     const curHoverVal = getValueInSlider(curHoverPos);
     if (curHoverVal > max || curHoverVal < min) return;
-    const stepDecimalCount = countDecimals(step);
+    const stepDecimalCount = countDecimals();
 
     const updatedVal = fixThumbRangeDeviation(curHoverVal);
     setHoverPos(curHoverPos);
